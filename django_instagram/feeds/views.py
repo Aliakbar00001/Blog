@@ -98,20 +98,19 @@ def signup(request):
     if request.method == 'POST':
         form = UserCreateForm(request.POST)
         if form.is_valid():
-            form.save()
-            user = authenticate(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password1']
-            )
+            user = form.save()
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
             if user:
                 login(request, user)
+                print("User logged in successfully.")  # Добавьте для отладки
                 return redirect('index')
-        # форма невалидна – покажем снова с ошибками
-        return render(request, 'feeds/signup.html', {'form': form})
-
+            else:
+                print("Authentication failed.")  # Если аутентификация не удалась
+        else:
+            print("Form is not valid.")  # Если форма не прошла валидацию
     else:
         form = UserCreateForm()
-        return render(request, 'feeds/signup.html', {'form': form})
+    return render(request, 'feeds/signup.html', {'form': form})
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
