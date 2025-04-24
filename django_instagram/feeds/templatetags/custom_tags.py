@@ -4,15 +4,16 @@ from django.urls import reverse, NoReverseMatch
 from feeds.models import Like
 
 register = template.Library()
+from django import template
 
+register = template.Library()
 @register.simple_tag
 def has_user_liked_post(post, user):
     try:
         like = Like.objects.get(post=post, user=user)
         return "fa-heart"
-    except:
+    except Like.DoesNotExist:
         return "fa-heart-o"
-
 
 @register.simple_tag
 def is_following(users_profile, profile_to_check):
@@ -29,7 +30,9 @@ def find_proper_user(user, room):
 
 @register.filter(name='addClass')
 def addClass(field, css):
-   return field.as_widget(attrs={"class":css})
+    if hasattr(field, 'as_widget'):
+        return field.as_widget(attrs={"class": css})
+    return field
 
 
 @register.filter(name='addID')

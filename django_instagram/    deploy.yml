@@ -1,0 +1,35 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches:
+      - main  # Пуш в ветку main будет запускать деплой
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Используем Ubuntu для работы с GitHub Actions
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # Проверка кода из репозитория
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'  # Указываем версию Python (проверьте с вашей версией)
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Устанавливаем зависимости из requirements.txt
+
+    - name: Run migrations
+      run: |
+        python manage.py migrate  # Запускаем миграции базы данных
+
+    - name: Deploy to Render
+      env:
+        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}  # Указываем секретный ключ для деплоя
+      run: |
+        curl -X POST https://api.render.com/v1/services/YOUR_SERVICE_ID/deploy \
+          -H "Authorization: Bearer $RENDER_API_KEY"  # Деплой на Render

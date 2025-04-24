@@ -23,4 +23,5 @@ urlpatterns = [
     path('like/', views.add_like, name='like'),
     path('comment/', views.add_comment, name='comment'),
     path('follow_toggle/', views.follow_toggle, name='follow_toggle'),
+
 ]

@@ -95,41 +95,41 @@ def new_chat_create(request, username):
 
 
 def signup(request):
-    form = UserCreateForm()
-
     if request.method == 'POST':
         form = UserCreateForm(request.POST)
         if form.is_valid():
             form.save()
-            user = User.objects.get(username=request.POST['username'])
-            profile = UserProfile(user=user)
-            profile.save()
+            user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password1']
+            )
+            if user:
+                login(request, user)
+                return redirect('index')
+        # форма невалидна – покажем снова с ошибками
+        return render(request, 'feeds/signup.html', {'form': form})
 
-            new_user = authenticate(username=form.cleaned_data['username'],
-                                    password=form.cleaned_data['password1'])
-            login(request, new_user)
-            return redirect('index')
+    else:
+        form = UserCreateForm()
+        return render(request, 'feeds/signup.html', {'form': form})
 
-    return render(request, 'feeds/signup.html', {
-        'form': form
-    })
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
 
 
 def login_user(request):
     form = AuthenticationForm()
 
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('index')
+        form = AuthenticationForm(request, data=request.POST)  # передаем request в форму
+        if form.is_valid():  # если форма прошла валидацию
+            user = form.get_user()  # получаем пользователя из формы
+            login(request, user)  # авторизуем пользователя
+            return redirect('index')  # переадресуем на главную страницу
 
-    return render(request, 'feeds/login.html', {
-        'form': form
-    })
-
+    return render(request, 'feeds/login.html', {'form': form})
 
 def signout(request):
     logout(request)
