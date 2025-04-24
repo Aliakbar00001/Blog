@@ -100,9 +100,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 # Redirects (по желанию)
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'

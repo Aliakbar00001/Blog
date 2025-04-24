@@ -1,2 +1,2 @@
-web: gunicorn django_ig.wsgi --log-file -
+web: gunicorn django_ig.wsgi:application
 worker: python manage.py runworker -v2
