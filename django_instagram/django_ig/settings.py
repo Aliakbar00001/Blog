@@ -95,9 +95,9 @@ DATABASES = {
 'default': dj_database_url.config(conn_max_age=500)
     }
 }
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
-
+DATABASES = {
+    'default': dj_database_url.config(default=f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}", conn_max_age=500)
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -141,8 +141,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
