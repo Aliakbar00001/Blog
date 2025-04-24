@@ -1,0 +1,14 @@
+Django==3.2.25
+channels==3.0.4
+daphne==3.0.2
+asgiref>=3.3.4,<4
+gunicorn
+psycopg2-binary
+dj-database-url
+whitenoise
+python-decouple
+django-annoying
+django-imagekit
+haikunator
+Pillow
+Unipath
