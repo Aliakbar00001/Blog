@@ -18,3 +18,4 @@ Run these two commands in two separate terminals
 
     python3 manage.py runserver --noworker
     python3 manage.py runworker
+
